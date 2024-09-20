@@ -1,0 +1,6 @@
+@_1.Template_NET_Core.Application_HostAddress = http://localhost:5149
+
+GET {{_1.Template_NET_Core.Application_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
