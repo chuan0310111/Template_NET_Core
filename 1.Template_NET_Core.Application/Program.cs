@@ -94,7 +94,7 @@ builder.Services.AddHttpClient("HsinchuGovOptions")
 builder.Services.AddScoped<ISampleService, SampleService>();
 
 // Repositories
-// Decorate > 未已註冊的服務添加裝飾器
+// Decorate > 為已註冊的服務添加裝飾器
 builder.Services.AddScoped<IHsinChuRepository, HsinChuRepository>().Decorate<IHsinChuRepository, CachedHsinChuRepository>();
 
 // AutoMapper

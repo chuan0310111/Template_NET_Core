@@ -47,7 +47,14 @@ namespace _1.Template_NET_Core.Application.Controllers
 
     public class LoginRequest
     {
+        /// <summary>
+        /// 帳號  ex. test
+        /// </summary>
         public string Username { get; set; }
+
+        /// <summary>
+        /// 密碼  ex. password
+        /// </summary>
         public string Password { get; set; }
     }
 }

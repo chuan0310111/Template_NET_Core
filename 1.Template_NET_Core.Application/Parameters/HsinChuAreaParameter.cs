@@ -3,7 +3,7 @@
     public class HsinChuAreaParameter
     {
         /// <summary>
-        /// 來源別
+        /// 來源別  ex. Channel1、Channel2
         /// </summary>
         public string? Channel { get; set; }
     }

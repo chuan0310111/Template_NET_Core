@@ -64,6 +64,9 @@ namespace _3.Template_NET_Core.Repositories.Implement
 
                     this._logger.LogInformation($"{logName} Rp Data: {content}");
 
+                    //_httpContextAccessor.HttpContext.Items.Add("ResultMessage", "自訂Message");
+                    //_httpContextAccessor.HttpContext.Items.Add("ResultCode", "自動Code");
+
                     return result.ToList();
 
                 }
