@@ -20,11 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\Validators\" />
-    <Folder Include="Parameters\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\0.Template_NET_Core.Common\0.Template_NET_Core.Common.csproj" />
     <ProjectReference Include="..\2.Template_NET_Core.Services\2.Template_NET_Core.Services.csproj" />
   </ItemGroup>

@@ -1,6 +1,8 @@
 using _0.Template_NET_Core.Common.Options;
+using _1.Template_NET_Core.Application.Controllers.Validators;
 using _1.Template_NET_Core.Application.Infrastructure.Filter;
 using _1.Template_NET_Core.Application.Infrastructure.MapperProfiler;
+using _1.Template_NET_Core.Application.Parameters;
 using _2.Template_NET_Core.Services.Implements;
 using _2.Template_NET_Core.Services.Infrastructure.MapperProfile;
 using _2.Template_NET_Core.Services.Interface;
@@ -46,7 +48,7 @@ builder.Services.AddSwaggerGen();
 
 // Validator
 builder.Services.AddTransient<IValidatorFactory, ServiceProviderValidatorFactory>();
-// TODO
+builder.Services.AddTransient<IValidator<HsinChuAreaParameter>, HsinChuAreaParameterValidator>();
 
 // Options
 builder.Services.AddOptions<HsinchuGovOptions>().Bind(

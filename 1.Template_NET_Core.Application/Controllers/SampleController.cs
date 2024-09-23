@@ -1,6 +1,9 @@
-﻿using _1.Template_NET_Core.Application.ViewModels;
+﻿using _1.Template_NET_Core.Application.Controllers.Validators;
+using _1.Template_NET_Core.Application.Parameters;
+using _1.Template_NET_Core.Application.ViewModels;
 using _2.Template_NET_Core.Services.Interface;
 using AutoMapper;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -25,44 +28,74 @@ namespace _1.Template_NET_Core.Application.Controllers
             this._sampleService = sampleService;
         }
 
-        [HttpGet]
-        public async Task<List<HsinChuAreaViewModel>> GetAreaAsync() 
+        /// <summary>
+        /// 取得鄉鎮市公所名稱 By Cache
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("GetAreaAsync")]
+        public async Task<List<HsinChuAreaViewModel>> GetAreaAsync([FromQuery] HsinChuAreaParameter parameter, [FromServices] IValidator<HsinChuAreaParameter> validator) 
         {
+            var logName = $"[{this._httpContextAccessor?.HttpContext?.TraceIdentifier}] [Template_NET_Core] [SampleController] [GetAreaAsync()] [channel:{parameter.Channel}] [取得鄉鎮市公所名稱 By Cache]";
 
-            var getAreas = await _sampleService.GetAreaAsync();
-            return this._mapper.Map<List<HsinChuAreaViewModel>>(getAreas);
+            try
+            {
+                this._logger.LogInformation($"{logName}  RQ");
+
+                var res = validator.Validate(parameter);
+                if (res.IsValid)
+                {
+                    var getAreas = await _sampleService.GetAreaAsync();
+                    return this._mapper.Map<List<HsinChuAreaViewModel>>(getAreas);
+                }
+                else
+                {
+                    throw new ValidationException($"{string.Join("、", res.Errors.Select(x => x.ErrorMessage))}");
+
+                }
+            }
+            catch (Exception ex)
+            {
+                this._logger.LogError($"{logName} ex: {ex.Message}");
+                throw ex;
+            }
+
+
         }
 
-        //[HttpGet]
-        //public async Task<List<HsinChuAreaViewModel>> SetAreaAsync()
-        //{
-        //    var setAreas = await _sampleService.SetAreaAsync();
-        //    return this._mapper.Map<List<HsinChuAreaViewModel>>(setAreas);
-        //}
-
-        // GET api/<SampleController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        /// <summary>
+        /// 強制取得鄉鎮市公所名稱 重設cache
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("SetAreaAsync")]
+        public async Task<List<HsinChuAreaViewModel>> SetAreaAsync([FromBody] HsinChuAreaParameter parameter, [FromServices] IValidator<HsinChuAreaParameter> validator)
         {
-            return "value";
+            var logName = $"[{this._httpContextAccessor?.HttpContext?.TraceIdentifier}] [Template_NET_Core] [SampleController] [SetAreaAsync()] [channel:{parameter.Channel}] [強制取得鄉鎮市公所名稱 重設cache]";
+
+            try
+            {
+                this._logger.LogInformation($"{logName}  RQ");
+
+                var res = validator.Validate(parameter);
+                if (res.IsValid)
+                {
+                    var getAreas = await _sampleService.GetAreaAsync();
+                    return this._mapper.Map<List<HsinChuAreaViewModel>>(getAreas);
+                }
+                else
+                {
+                    throw new ValidationException($"{string.Join("、", res.Errors.Select(x => x.ErrorMessage))}");
+
+                }
+            }
+            catch (Exception ex)
+            {
+                this._logger.LogError($"{logName} ex: {ex.Message}");
+                throw ex;
+            }
+
+
         }
 
-        // POST api/<SampleController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
 
-        // PUT api/<SampleController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<SampleController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
     }
 }
