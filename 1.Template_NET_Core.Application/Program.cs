@@ -10,9 +10,12 @@ using _3.Template_NET_Core.Repositories.Cached;
 using _3.Template_NET_Core.Repositories.Implement;
 using _3.Template_NET_Core.Repositories.Interface;
 using FluentValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Polly;
 using System.Reflection;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,6 +46,34 @@ builder.Services.AddSwaggerGen(options => {
         Description = ""
     });
 
+    options.AddSecurityDefinition("Bearer",
+    new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "JWT Authorization"
+    });
+
+    options.AddSecurityRequirement(
+        new OpenApiSecurityRequirement
+        {
+            {
+                new OpenApiSecurityScheme
+                {
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "Bearer"
+                    }
+                },
+                new string[] {}
+            }
+        });
+
+
 });
 
 // Validator
@@ -70,6 +101,28 @@ builder.Services.AddScoped<IHsinChuRepository, HsinChuRepository>().Decorate<IHs
 builder.Services.AddAutoMapper(typeof(ControllerMapperProfiler), typeof(ServiceMapperProfile));
 
 
+// 添加身份驗證服務，並設置 JWT Bearer 認證
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = "https://mia1-issuer.com", // 須替換為真實的發行者
+        ValidAudience = "miaAudience", // 須替換為真實的受眾
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("vN8g4LjNWyVbmGRRBgIXgvGlV/nRIvYIshZw7H3vqZI=")) // 使用對稱密鑰
+    };
+});
+
+builder.Services.AddControllers();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -89,6 +142,9 @@ app.UseAuthentication();
 
 
 app.UseHttpsRedirection();
+
+// 使用身份驗證中介軟體
+app.UseAuthentication(); // 在 app.UseAuthorization() 之前調用
 
 app.UseAuthorization();
 

@@ -4,6 +4,7 @@ using _1.Template_NET_Core.Application.ViewModels;
 using _2.Template_NET_Core.Services.Interface;
 using AutoMapper;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -16,6 +17,7 @@ namespace _1.Template_NET_Core.Application.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class SampleController : ControllerBase
     {
         private readonly IMapper _mapper;
