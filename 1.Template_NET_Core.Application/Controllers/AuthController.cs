@@ -8,10 +8,18 @@ using System.Text;
 
 namespace _1.Template_NET_Core.Application.Controllers
 {
+    /// <summary>
+    /// 登入
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
     {
+        /// <summary>
+        /// 登入
+        /// </summary>
+        /// <param name="login"></param>
+        /// <returns></returns>
         [HttpPost("login")]
         public IActionResult Login([FromBody] LoginRequest login)
         {
