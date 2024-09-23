@@ -11,6 +11,9 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace _1.Template_NET_Core.Application.Controllers
 {
+    /// <summary>
+    /// 範例API
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class SampleController : ControllerBase

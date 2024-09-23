@@ -33,18 +33,17 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-//builder.Services.AddSwaggerGen(options => {
-//    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-//    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
-//    options.SwaggerDoc("v1", new OpenApiInfo
-//    {
-//        Version = "v1",
-//        Title = "Template API",
-//        Description = ""
-//    });
+builder.Services.AddSwaggerGen(options => {
+    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Version = "v1",
+        Title = "Template API",
+        Description = ""
+    });
 
-//});
+});
 
 // Validator
 builder.Services.AddTransient<IValidatorFactory, ServiceProviderValidatorFactory>();
