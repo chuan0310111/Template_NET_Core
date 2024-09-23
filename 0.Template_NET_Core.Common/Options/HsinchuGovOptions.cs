@@ -17,5 +17,10 @@ namespace _0.Template_NET_Core.Common.Options
         /// 新竹縣政府Url
         /// </summary>
         public string HsinchuGov_Url { get; set; }
+
+        /// <summary>
+        /// 每日幾點cache失效
+        /// </summary>
+        public int HsinchuGov_CacheExpireAtCertainHour { get; set; }
     }
 }

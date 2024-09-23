@@ -14,5 +14,11 @@ namespace _3.Template_NET_Core.Repositories.Interface
         /// </summary>
         /// <returns></returns>
         Task<List<HsinChuAreaDataModel>> GetAreaAsync();
+
+        /// <summary>
+        /// 設定鄉鎮市公所名稱
+        /// </summary>
+        /// <returns></returns>
+        Task<List<HsinChuAreaDataModel>> SetAreaAsync();
     }
 }

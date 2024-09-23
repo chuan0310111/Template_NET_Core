@@ -4,6 +4,7 @@ using _1.Template_NET_Core.Application.Infrastructure.MapperProfiler;
 using _2.Template_NET_Core.Services.Implements;
 using _2.Template_NET_Core.Services.Infrastructure.MapperProfile;
 using _2.Template_NET_Core.Services.Interface;
+using _3.Template_NET_Core.Repositories.Cached;
 using _3.Template_NET_Core.Repositories.Implement;
 using _3.Template_NET_Core.Repositories.Interface;
 using FluentValidation;
@@ -61,7 +62,8 @@ builder.Services.AddHttpClient("HsinchuGovOptions")
 builder.Services.AddScoped<ISampleService, SampleService>();
 
 // Repositories
-builder.Services.AddScoped<IHsinChuRepository, HsinChuRepository>();
+// Decorate > 未已註冊的服務添加裝飾器
+builder.Services.AddScoped<IHsinChuRepository, HsinChuRepository>().Decorate<IHsinChuRepository, CachedHsinChuRepository>();
 
 // AutoMapper
 builder.Services.AddAutoMapper(typeof(ControllerMapperProfiler), typeof(ServiceMapperProfile));

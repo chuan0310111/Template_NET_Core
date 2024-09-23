@@ -24,8 +24,22 @@ namespace _2.Template_NET_Core.Services.Implements
             _hsinChuRepository = hsinChuRepository;
         }
 
+        /// <summary>
+        /// 取得鄉鎮市公所名稱 By Cache
+        /// </summary>
+        /// <returns></returns>
         public async Task<List<HsinChuAreaDto>> GetAreaAsync() {
             var data = await this._hsinChuRepository.GetAreaAsync();
+            return this._mapper.Map<List<HsinChuAreaDto>>(data);
+        }
+
+        /// <summary>
+        /// 強制取得鄉鎮市公所名稱 重設cache
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<HsinChuAreaDto>> SetAreaAsync()
+        {
+            var data = await this._hsinChuRepository.SetAreaAsync();
             return this._mapper.Map<List<HsinChuAreaDto>>(data);
         }
     }

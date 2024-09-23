@@ -26,11 +26,19 @@ namespace _1.Template_NET_Core.Application.Controllers
         }
 
         [HttpGet]
-        public async Task<List<HsinChuAreaViewModel>> GetAreaAsync() {
+        public async Task<List<HsinChuAreaViewModel>> GetAreaAsync() 
+        {
 
             var getAreas = await _sampleService.GetAreaAsync();
             return this._mapper.Map<List<HsinChuAreaViewModel>>(getAreas);
         }
+
+        //[HttpGet]
+        //public async Task<List<HsinChuAreaViewModel>> SetAreaAsync()
+        //{
+        //    var setAreas = await _sampleService.SetAreaAsync();
+        //    return this._mapper.Map<List<HsinChuAreaViewModel>>(setAreas);
+        //}
 
         // GET api/<SampleController>/5
         [HttpGet("{id}")]

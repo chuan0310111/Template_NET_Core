@@ -35,7 +35,21 @@ namespace _3.Template_NET_Core.Repositories.Implement
         /// <returns></returns>
         public async Task<List<HsinChuAreaDataModel>> GetAreaAsync() {
 
-            var logName = $"[{this._httpContextAccessor.HttpContext.TraceIdentifier}] [Template_NET_Core] [HsinChuRepository] [GetAreasAsync()] [取得鄉鎮市公所名稱]";
+            var logName = $"[{this._httpContextAccessor.HttpContext.TraceIdentifier}] [Template_NET_Core] [HsinChuRepository] [GetAreaAsync()] [取得鄉鎮市公所名稱]";
+
+            this._logger.LogInformation($"{logName} RQ");
+
+            return await SetAreaAsync();
+        }
+
+
+        /// <summary>
+        /// 取得鄉鎮市公所名稱(By API)
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<HsinChuAreaDataModel>> SetAreaAsync() {
+
+            var logName = $"[{this._httpContextAccessor.HttpContext.TraceIdentifier}] [Template_NET_Core] [HsinChuRepository] [SetAreaAsync()] [設定鄉鎮市公所名稱]";
 
             this._logger.LogInformation($"{logName} RQ");
 
@@ -62,8 +76,6 @@ namespace _3.Template_NET_Core.Repositories.Implement
 
                 throw new HttpRequestException($"{logName} API回應格式異常: {_options.Value.HsinchuGov_Url} 發生異常 ex:{ex.ToString()}");
             }
-
-        
         }
 
     }
