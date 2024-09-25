@@ -84,6 +84,7 @@ builder.Services.AddSwaggerGen(options => {
 // Validator
 builder.Services.AddTransient<IValidatorFactory, ServiceProviderValidatorFactory>();
 builder.Services.AddTransient<IValidator<HsinChuAreaParameter>, HsinChuAreaParameterValidator>();
+builder.Services.AddTransient<IValidator<LoginParameter>, LoginParameterValidator>();
 
 // Options
 builder.Services.AddOptions<HsinchuGovOptions>().Bind(

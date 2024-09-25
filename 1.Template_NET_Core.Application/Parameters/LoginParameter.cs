@@ -5,11 +5,11 @@
         /// <summary>
         /// 帳號  ex. test
         /// </summary>
-        public string Username { get; set; }
+        public string? Username { get; set; }
 
         /// <summary>
         /// 密碼  ex. password
         /// </summary>
-        public string Password { get; set; }
+        public string? Password { get; set; }
     }
 }
