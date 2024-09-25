@@ -34,6 +34,14 @@ jobs:
         $destination = "\\${{ secrets.IIS_HOST }}\C$\inetpub\wwwroot\test3"
         $username = "${{ secrets.IIS_USERNAME }}"
         $password = "${{ secrets.IIS_PASSWORD }}"
+         
+        # 使用 New-PSDrive 創建一個新的驅動器
         $securePassword = ConvertTo-SecureString $password -AsPlainText -Force
         $credential = New-Object System.Management.Automation.PSCredential ($username, $securePassword)
-        Copy-Item -Path $source -Destination $destination -Recurse -Credential $credential
+        New-PSDrive -Name Z -PSProvider FileSystem -Root $destination -Credential $credential
+        
+        # 複製檔案
+        Copy-Item -Path $source -Destination Z:\ -Recurse
+        
+        # 移除驅動器
+        Remove-PSDrive -Name Z
