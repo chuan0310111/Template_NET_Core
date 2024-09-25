@@ -13,6 +13,8 @@ using _3.Template_NET_Core.Repositories.Interface;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Polly;
@@ -86,16 +88,17 @@ builder.Services.AddTransient<IValidator<HsinChuAreaParameter>, HsinChuAreaParam
 // Options
 builder.Services.AddOptions<HsinchuGovOptions>().Bind(
     builder.Configuration.GetSection(HsinchuGovOptions.SectionKey));
+builder.Services.AddOptions<JwtSettingsOptions>().Bind(
+    builder.Configuration.GetSection(JwtSettingsOptions.SectionKey));
 
 // HttpClientFactory
 var timeoutPolicy = Policy.TimeoutAsync<HttpResponseMessage>(30);
-builder.Services.AddHttpClient("HsinchuGovOptions")
+builder.Services.AddHttpClient("HsinchuGovHttpClient")
     .AddTransientHttpErrorPolicy(builder => builder.WaitAndRetryAsync(new[] { TimeSpan.FromMilliseconds(500) }))
     .AddPolicyHandler(timeoutPolicy);
 
 // Services
 builder.Services.AddScoped<IAuthService, AuthService>();
-
 builder.Services.AddScoped<ISampleService, SampleService>();
 
 // Repositories
@@ -106,7 +109,6 @@ builder.Services.AddScoped<IDatabaseRepository, DatabaseRepository>();
 // AutoMapper
 builder.Services.AddAutoMapper(typeof(ControllerMapperProfiler), typeof(ServiceMapperProfile));
 
-
 // 添加身份驗證服務，並設置 JWT Bearer 認證
 builder.Services.AddAuthentication(options =>
 {
@@ -115,15 +117,19 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
+    // 這裡從 DI 容器中解析綁定的 JwtSettingsOptions
+    var serviceProvider = builder.Services.BuildServiceProvider();
+    var jwtSettings = serviceProvider.GetRequiredService<IOptions<JwtSettingsOptions>>().Value;
+
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = "https://mia1-issuer.com", // 須替換為真實的發行者
-        ValidAudience = "miaAudience", // 須替換為真實的受眾
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("vN8g4LjNWyVbmGRRBgIXgvGlV/nRIvYIshZw7H3vqZI=")) // 使用對稱密鑰
+        ValidIssuer = jwtSettings.Issuer, // 須替換為真實的發行者
+        ValidAudience = jwtSettings.Audience, // 須替換為真實的受眾
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key)) // 使用對稱密鑰
     };
 });
 

@@ -1,4 +1,5 @@
-﻿using _1.Template_NET_Core.Application.Parameters;
+﻿using _0.Template_NET_Core.Common.Options;
+using _1.Template_NET_Core.Application.Parameters;
 using _1.Template_NET_Core.Application.ViewModels;
 using _2.Template_NET_Core.Services.Implement;
 using _2.Template_NET_Core.Services.InfoModels;
@@ -8,6 +9,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
@@ -29,13 +31,15 @@ namespace _1.Template_NET_Core.Application.Controllers
         private readonly ILogger<SampleController> _logger;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IAuthService _authService;
+        private readonly IOptions<JwtSettingsOptions> _options;
 
-        public AuthController(IMapper mapper, ILogger<SampleController> logger, IHttpContextAccessor httpContextAccessor, IAuthService authService)
+        public AuthController(IMapper mapper, ILogger<SampleController> logger, IHttpContextAccessor httpContextAccessor, IAuthService authService, IOptions<JwtSettingsOptions> options)
         {
             this._mapper = mapper;
             this._logger = logger;
             this._httpContextAccessor = httpContextAccessor;
             this._authService = authService;
+            this._options = options;
         }
 
         /// <summary>
@@ -65,15 +69,15 @@ namespace _1.Template_NET_Core.Application.Controllers
             };
 
                     // 密鑰和簽名算法
-                    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("vN8g4LjNWyVbmGRRBgIXgvGlV/nRIvYIshZw7H3vqZI=")); // 要與驗證中相同
+                    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.Value.Key)); // 要與驗證中相同
                     var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
                     // 創建 JWT Token
                     var token = new JwtSecurityToken(
-                        issuer: "https://mia1-issuer.com",
-                        audience: "miaAudience",
+                        issuer: _options.Value.Issuer,
+                        audience: _options.Value.Audience,
                         claims: claims,
-                        expires: DateTime.Now.AddMinutes(30),
+                        expires: DateTime.Now.AddMinutes(_options.Value.ExpireMinutes),
                         signingCredentials: creds);
 
                     // 返回 Token

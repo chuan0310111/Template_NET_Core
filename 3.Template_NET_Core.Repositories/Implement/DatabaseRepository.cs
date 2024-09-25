@@ -40,8 +40,6 @@ namespace _3.Template_NET_Core.Repositories.Implement
             
             this._logger.LogInformation($"{logName} RQ:{JsonConvert.SerializeObject(condition)}");
 
-            throw new HttpRequestException();
-
             var query = "SELECT * FROM Users WHERE Username = @Username";
             var result = await _dbConnection.QuerySingleOrDefaultAsync<UsersDataModel>(query, new { condition.Username });
 
