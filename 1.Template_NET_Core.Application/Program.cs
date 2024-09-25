@@ -143,11 +143,11 @@ builder.Services.AddTransient<IDbConnection>((sp) =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
+//if (app.Environment.IsDevelopment())
+//{
     app.UseSwagger();
     app.UseSwaggerUI(c => { c.SwaggerEndpoint("v1/swagger.yaml", "Template_NET_Core V1");  });
-}
+//}
 
 app.UseRouting();
 app.UseAuthentication();
@@ -158,7 +158,7 @@ app.UseAuthentication();
 
 
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 // 使用身份驗證中介軟體
 app.UseAuthentication(); // 在 app.UseAuthorization() 之前調用
