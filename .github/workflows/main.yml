@@ -32,7 +32,7 @@ jobs:
         # 使用 PowerShell 將發佈檔案複製到 IIS 伺服器
         $source = "$env:GITHUB_WORKSPACE\publish\*"
         $destination = "\\${{ secrets.IIS_HOST }}\C$\inetpub\wwwroot\test3"
-        $username = "Administrator"
+        $username = "DESKTOP-K0JLNQN\Administrator"
         $password = "0310"
          
         # 使用 New-PSDrive 創建一個新的驅動器
