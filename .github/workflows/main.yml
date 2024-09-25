@@ -30,8 +30,8 @@ jobs:
     - name: Copy files to IIS server
       run: |
         # 使用 PowerShell 將發佈檔案複製到 IIS 伺服器
-        $source = "$env:GITHUB_WORKSPACE\publish\*"
-        $destination = "\\${{ secrets.IIS_HOST }}\C$\inetpub\wwwroot\test3"
+        $source = "D:\a\Template_NET_Core\Template_NET_Core\publish\"
+        $destination = "C:\inetpub\wwwroot\test3"
         $username = "DESKTOP-K0JLNQN\Administrator"
         $password = "0310"
          
