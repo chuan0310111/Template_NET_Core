@@ -1,0 +1,37 @@
+name: CI/CD to Local IIS
+
+on:
+  push:
+    branches:
+      - master # 監聽主分支變更，您可以改成任何分支
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout the code
+      uses: actions/checkout@v2
+
+    - name: Set up .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Install dependencies
+      run: dotnet restore
+
+    - name: Build the project
+      run: dotnet build --configuration Release
+
+    - name: Publish the project
+      run: dotnet publish -c Release -o ./publish
+
+    - name: Copy files to IIS server
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.IIS_HOST }}        # 您的 IIS 伺服器 IP
+        username: ${{ secrets.IIS_USERNAME }} # 登錄 IIS 的用戶名
+        password: ${{ secrets.IIS_PASSWORD }} # 登錄 IIS 的密碼
+        source: './publish/*'                 # 發佈檔案的路徑
+        target: 'C:/inetpub/wwwroot/test3'  # 您的 IIS 網站目錄
