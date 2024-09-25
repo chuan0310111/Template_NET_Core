@@ -16,12 +16,14 @@ namespace _2.Template_NET_Core.Services.Implements
         private readonly IMapper _mapper;
         private readonly ILogger<SampleService> _logger;
         private readonly IHsinChuRepository _hsinChuRepository;
+        private readonly IDatabaseRepository _databaseRepository;
 
-        public SampleService(IMapper mapper, ILogger<SampleService> logger, IHsinChuRepository hsinChuRepository)
+        public SampleService(IMapper mapper, ILogger<SampleService> logger, IHsinChuRepository hsinChuRepository, IDatabaseRepository databaseRepository)
         {
             _mapper = mapper;
             _logger = logger;
             _hsinChuRepository = hsinChuRepository;
+            _databaseRepository = databaseRepository;
         }
 
         /// <summary>
@@ -29,6 +31,7 @@ namespace _2.Template_NET_Core.Services.Implements
         /// </summary>
         /// <returns></returns>
         public async Task<List<HsinChuAreaDto>> GetAreaAsync() {
+
             var data = await this._hsinChuRepository.GetAreaAsync();
             return this._mapper.Map<List<HsinChuAreaDto>>(data);
         }

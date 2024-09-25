@@ -3,6 +3,7 @@ using _1.Template_NET_Core.Application.Controllers.Validators;
 using _1.Template_NET_Core.Application.Infrastructure.Filter;
 using _1.Template_NET_Core.Application.Infrastructure.MapperProfiler;
 using _1.Template_NET_Core.Application.Parameters;
+using _2.Template_NET_Core.Services.Implement;
 using _2.Template_NET_Core.Services.Implements;
 using _2.Template_NET_Core.Services.Infrastructure.MapperProfile;
 using _2.Template_NET_Core.Services.Interface;
@@ -11,9 +12,11 @@ using _3.Template_NET_Core.Repositories.Implement;
 using _3.Template_NET_Core.Repositories.Interface;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Data.SqlClient;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Polly;
+using System.Data;
 using System.Reflection;
 using System.Text;
 
@@ -91,11 +94,14 @@ builder.Services.AddHttpClient("HsinchuGovOptions")
     .AddPolicyHandler(timeoutPolicy);
 
 // Services
+builder.Services.AddScoped<IAuthService, AuthService>();
+
 builder.Services.AddScoped<ISampleService, SampleService>();
 
 // Repositories
 // Decorate > 為已註冊的服務添加裝飾器
 builder.Services.AddScoped<IHsinChuRepository, HsinChuRepository>().Decorate<IHsinChuRepository, CachedHsinChuRepository>();
+builder.Services.AddScoped<IDatabaseRepository, DatabaseRepository>();
 
 // AutoMapper
 builder.Services.AddAutoMapper(typeof(ControllerMapperProfiler), typeof(ServiceMapperProfile));
@@ -122,6 +128,10 @@ builder.Services.AddAuthentication(options =>
 });
 
 builder.Services.AddControllers();
+
+// 註冊資料庫連線至 DI 容器
+builder.Services.AddTransient<IDbConnection>((sp) =>
+    new SqlConnection(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
 
