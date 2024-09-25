@@ -28,10 +28,12 @@ jobs:
       run: dotnet publish -c Release -o ./publish
 
     - name: Copy files to IIS server
-      uses: appleboy/scp-action@master
-      with:
-        host: ${{ secrets.IIS_HOST }}        # 您的 IIS 伺服器 IP
-        username: ${{ secrets.IIS_USERNAME }} # 登錄 IIS 的用戶名
-        password: ${{ secrets.IIS_PASSWORD }} # 登錄 IIS 的密碼
-        source: './publish/*'                 # 發佈檔案的路徑
-        target: 'C:/inetpub/wwwroot/test3'  # 您的 IIS 網站目錄
+      run: |
+        # 使用 PowerShell 將發佈檔案複製到 IIS 伺服器
+        $source = "$(System.DefaultWorkingDirectory)\publish\*"
+        $destination = "\\${{ secrets.IIS_HOST }}\C$\inetpub\wwwroot\test3"
+        $username = "${{ secrets.IIS_USERNAME }}"
+        $password = "${{ secrets.IIS_PASSWORD }}"
+        $securePassword = ConvertTo-SecureString $password -AsPlainText -Force
+        $credential = New-Object System.Management.Automation.PSCredential ($username, $securePassword)
+        Copy-Item -Path $source -Destination $destination -Recurse -Credential $credential
